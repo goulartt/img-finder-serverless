@@ -1,0 +1,47 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+# You can always add more config options for more control.
+# We've included some commented out config examples here.
+# Just uncomment any of them to get that config option.
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+service: img-recognition
+
+app: utfpr-serverless
+org: goulartt
+
+# You can pin your service to only deploy with a specific Serverless version
+# Check out our docs for more details
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  memorySize: 256
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:GetObject
+        - s3:PutObject
+      Resource:
+        - "arn:aws:s3:::*"
+# you can overwrite defaults here
+  stage: dev
+  region: us-east-1
+
+
+functions:
+  recognition:
+    handler: recognition.handler
+    environment:
+      bucket: ml-img-utpfr-recognition
+    events:
+      - s3:
+          bucket: ml-img-utpfr-recognition
+          event: s3:ObjectCreated:*
